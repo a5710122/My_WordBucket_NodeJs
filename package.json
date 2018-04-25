@@ -1,0 +1,27 @@
+{
+  "name": "wordbucket",
+  "version": "1.0.0",
+  "description": "wordbucket ver. NodeJs + Express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a5710122/My_WordBucket_NodeJs.git"
+  },
+  "keywords": [
+    "wordbucketNodeJs"
+  ],
+  "author": "Narudon S.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/a5710122/My_WordBucket_NodeJs/issues"
+  },
+  "homepage": "https://github.com/a5710122/My_WordBucket_NodeJs#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "ejs": "^2.5.9",
+    "express": "^4.16.3"
+  }
+}
