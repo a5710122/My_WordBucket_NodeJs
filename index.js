@@ -6,24 +6,46 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs'); //template
 
-//the task array with initial placeholders for added task
-var task = ["buy socks", "practise with nodejs"];
+//the word array with initial placeholders for added word
+var word = ["socks", "practise"];
+var complete = [];
 
 //function
-function addingNewTask (req, res) {  //post route for adding new task
-    var newTask = req.body.newtask;
-    task.push(newTask);  //add the new task from the post route into the array
+function addingNewWord (req, res) {  //post route for adding new word
+    var newWord = req.body.newword;
+    word.push(newWord);  //add the new word from the post route into the array
     res.redirect("/");  //after adding to the array go back to the root route    
 }
 
-function renderDisplay(req, res) {  //render the ejs and display added task
-    res.render("index", { task: task});
+function renderDisplay(req, res) {  //render the ejs and display added word
+    res.render("index", { word: word, complete: complete });
 }
 
 // call function
-app.get("/", renderDisplay) 
-app.post('/addtask', addingNewTask); //call function add word
 
+app.post('/addword', addingNewWord); //call function add word
+
+
+app.post("/removeword", function(req, res) {
+     var completeWord = req.body.check;
+
+//check for the "typeof" the different completed word, then add into the complete word
+     if (typeof completeTask === "string") {
+          complete.push(completeWord);
+
+//check if the completed word already exist in the word when checked, then remove using the array splice method
+          word.splice(word.indexOf(completeWord), 1);
+
+     } else if (typeof completeWord === "object") {
+         for (var i = 0; i < completeWord.length; i++) {     
+             complete.push(completeWord[i]);
+             word.splice(word.indexOf(completeWord[i]), 1);
+         }
+     }
+     res.redirect("/");
+});
+
+app.get("/", renderDisplay) 
 //the server is listening on port 3000 for connections
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')
