@@ -30,7 +30,7 @@ app.post("/removeword", function(req, res) {
      var completeWord = req.body.check;
 
 //check for the "typeof" the different completed word, then add into the complete word
-     if (typeof completeTask === "string") {
+     if (typeof completeWord === "string") {
           complete.push(completeWord);
 
 //check if the completed word already exist in the word when checked, then remove using the array splice method
