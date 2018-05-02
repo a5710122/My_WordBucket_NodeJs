@@ -1,7 +1,11 @@
-var express = require('express'); //require the just installed express app
-var app = express(); //then we call express
+const express = require('express')
+const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt');
+const fs = require('fs');
 
-var bodyParser = require("body-parser");
+var app = express(); //then we call express
+var jsonParser = bodyParser.json();
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs'); //template
@@ -17,17 +21,18 @@ function addingNewWord (req, res) {  //post route for adding new word
     res.redirect("/");  //after adding to the array go back to the root route    
 }
 
-function renderDisplay(req, res) {  //render the ejs and display added word
-    res.render("index", { word: word, complete: complete });
-}
 
-// call function
+app.get('/', function (req, res) {
+    res.render("index", { word: word, complete: complete })
+})
 
 app.post('/addword', addingNewWord); //call function add word
 
 
 app.post("/removeword", function(req, res) {
      var completeWord = req.body.check;
+
+
 
 //check for the "typeof" the different completed word, then add into the complete word
      if (typeof completeWord === "string") {
@@ -45,7 +50,63 @@ app.post("/removeword", function(req, res) {
      res.redirect("/");
 });
 
-app.get("/", renderDisplay) 
+
+app.get('/login', function (req, res) {
+    res.render('login');
+});
+app.get('/registration', function (req, res) {
+    res.render('registration');
+});
+
+app.post('/registration', function (req, res) {
+    const saltRounds = 10000
+    bcrypt.genSalt(saltRounds, function (err, getsalt) {
+        bcrypt.hash(req.body.password, getsalt, function (err, gethash) {
+            salt = getsalt
+            hash = gethash
+            const json = {
+                email: req.body.email,
+                salt: salt,
+                hash: hash,
+                iterations: saltRounds,
+            }
+            const jsonString = JSON.stringify(json)
+            fs.writeFile('myuser.json', jsonString, 'utf8', function () {
+                res.send('ok : ' + req.body.email + ', ' + req.body.password + ' Salt : ' + salt + ' Hash : ' + hash)
+            });
+        })
+    })
+})
+
+app.post('/login', urlencodedParser, function (req, res) {
+    let obj = {} //สร้าง object เปล่าๆรอ
+    fs.readFile('myuser.json', 'utf8', function readFileCallback(err, data) {
+        if (err) {
+            console.log(err);
+        } else {
+            obj = JSON.parse(data)
+            if (obj.email == req.body.email) { // check ว่า email ที่ผู้ใช้กรอกมาใหม่ ตรงกับที่เราเก็บข้อมูลไว้หรือไม่
+                bcrypt.compare(req.body.password, obj.hash, function (err, result) {
+                    if (result) {
+                        //ถ้า result == true รหัสผ่านตรง
+                        res.send('ยินดีด้วยคุณลงชื่อเข้าใช้งานได้แล้ว')
+                        //TODO: เก็บข้อมูลผู้ใช้ไว้บน session
+                    }
+                    else {
+                        //ถ้า result == false รหัสผ่านไม่ตรง
+                        res.send('รหัสผ่านไม่ถูกต้อง')
+                    }
+                })
+            }
+            else{
+                res.send('เราไม่พบ Email ของคุณ')
+            }
+        }
+    })
+})
+
+
+
 //the server is listening on port 3000 for connections
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!')

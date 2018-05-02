@@ -20,12 +20,14 @@
   },
   "homepage": "https://github.com/a5710122/My_WordBucket_NodeJs#readme",
   "dependencies": {
+    "bcrypt": "^2.0.1",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "ejs": "^2.5.9",
     "express": "^4.16.3",
     "mocha": "^5.1.1",
+    "pug": "^2.0.3",
     "request": "^2.85.0",
     "selenium": "^2.20.0",
     "selenium-webdriver": "^4.0.0-alpha.1"
