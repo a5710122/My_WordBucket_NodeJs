@@ -6,6 +6,9 @@ const fs = require('fs');
 var app = express(); //then we call express
 var jsonParser = bodyParser.json();
 
+var path    = require("path");
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs'); //template
@@ -23,7 +26,7 @@ function addingNewWord (req, res) {  //post route for adding new word
 
 
 app.get('/', function (req, res) {
-    res.render("index", { word: word, complete: complete })
+    res.render("index2", { word: word, complete: complete })
 })
 
 app.post('/addword', addingNewWord); //call function add word
@@ -78,7 +81,7 @@ app.post('/registration', function (req, res) {
     })
 })
 
-app.post('/login', urlencodedParser, function (req, res) {
+app.post('/login', function (req, res) {
     let obj = {} //สร้าง object เปล่าๆรอ
     fs.readFile('myuser.json', 'utf8', function readFileCallback(err, data) {
         if (err) {
@@ -105,6 +108,9 @@ app.post('/login', urlencodedParser, function (req, res) {
     })
 })
 
+app.get('/aboutpage', function (req, res) {
+    res.render('about');
+});
 
 
 //the server is listening on port 3000 for connections
